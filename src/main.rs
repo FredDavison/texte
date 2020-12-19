@@ -2,12 +2,14 @@ use std::io;
 use std::io::Read;
 
 fn main() {
-    let mut buf: Vec<u8> = Vec::new();
+    let mut buf = [0; 8];
 
     loop {
-        let n = io::stdin().read(&mut buf) 
+        let _n = io::stdin().read(&mut buf) 
             .ok()
             .expect("error");
-        println!("{:?}", n);
+        let char = buf.bytes().next().expect("no bytes read");
+        println!("{:?}", char);
+        println!("{}", char == 113);
     }
 }
