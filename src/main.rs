@@ -5,11 +5,13 @@ fn main() {
     let mut buf = [0; 8];
 
     loop {
-        let _n = io::stdin().read(&mut buf) 
-            .ok()
-            .expect("error");
-        let char = buf.bytes().next().expect("no bytes read");
+        let _n = io::stdin().read(&mut buf).ok().expect("error");
+        let char = buf.bytes().next().expect("error").expect("error");
+
         println!("{:?}", char);
-        println!("{}", char == 113);
+
+        if char == 113 {
+            break;
+        };
     }
 }
