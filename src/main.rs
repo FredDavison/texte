@@ -6,7 +6,11 @@ use termios::*;
 fn main() {
     let mut buf = [0; 1];
     let mut i = 0;
-    enable_raw_mode();
+
+    let fd = io::stdin().as_raw_fd();
+    let original_term = Termios::from_fd(fd).expect("");
+    let term = Termios::from_fd(fd).expect("");
+    enable_raw_mode(fd, term);
 
     loop {
         let s = io::stdin();
@@ -21,12 +25,14 @@ fn main() {
         };
         i += 1;
     }
+    disable_raw_mode(fd, original_term);
 }
 
-fn enable_raw_mode() {
-    let fd = io::stdin().as_raw_fd();
-    let mut termios = Termios::from_fd(fd).expect("");
-
+fn enable_raw_mode(fd: i32, mut termios: Termios) {
     termios.c_lflag &= !ECHO;
-    tcsetattr(fd, TCSAFLUSH, &termios).expect("Error setting termios constants.");
+    tcsetattr(fd, TCSAFLUSH, &termios).expect("Error updating termios constants.");
+}
+
+fn disable_raw_mode(fd: i32, original_term: Termios) {
+    tcsetattr(fd, TCSAFLUSH, &original_term).expect("Error resetting termios constants to default.");
 }
