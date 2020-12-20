@@ -29,7 +29,7 @@ fn main() {
 }
 
 fn enable_raw_mode(fd: i32, mut termios: Termios) {
-    termios.c_lflag &= !ECHO;
+    termios.c_lflag &= !(ECHO | ICANON);
     tcsetattr(fd, TCSAFLUSH, &termios).expect("Error updating termios constants.");
 }
 
