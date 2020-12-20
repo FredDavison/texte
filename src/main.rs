@@ -1,11 +1,12 @@
 use std::io;
 use std::io::Read;
 use std::os::unix::io::AsRawFd;
+use std::str::from_utf8;
 use termios::*;
 
 fn main() {
-    let mut buf = [0; 1];
-    let mut i = 0;
+    let mut buf = vec![0; 1];
+    let mut _i = 0;
 
     let fd = io::stdin().as_raw_fd();
     let original_term = Termios::from_fd(fd).expect("");
@@ -18,12 +19,12 @@ fn main() {
         let n = handle.read(&mut buf).expect("Error reading");
 
         let char = buf.bytes().next().expect("").expect("");
-        println!("{}: {:?}, {} bytes", i, char, n);
+        println!("{} {:?} {:?}", _i, from_utf8(&buf).expect("Could not decode char"), char);
 
         if char == 113 {
             break;
         };
-        i += 1;
+        _i += 1;
     }
     disable_raw_mode(fd, original_term);
 }
