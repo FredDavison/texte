@@ -3,23 +3,24 @@ use termion::raw::IntoRawMode;
 
 fn main() {
     let _stdout = stdout().into_raw_mode().unwrap();
-    let mut _i = 0;
 
     for b in io::stdin().bytes() {
-        let b = b.unwrap();
-        let c = b as char;
+        match b {
+            Ok(b) => {
+                let c = b as char;
 
-        if b == to_ctrl_byte('q') {
-            break;
-        };
+                if b == to_ctrl_byte('q') {
+                    break;
+                };
 
-        if c.is_control() {
-            println!("{:?} {:#b}\r", b, b);
-        } else {
-            println!("{:?} {:#b} ({})\r", b, b, c);
+                if c.is_control() {
+                    println!("{:?} {:#b}\r", b, b);
+                } else {
+                    println!("{:?} {:#b} ({})\r", b, b, c);
+                }
+            }
+            Err(e) => die(e),
         }
-
-        _i += 1;
     }
 }
 
@@ -28,3 +29,6 @@ fn to_ctrl_byte(c: char) -> u8 {
     byte & 0b0001_1111
 }
 
+fn die(e: std::io::Error) {
+    panic!(e);
+}
