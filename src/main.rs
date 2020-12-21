@@ -13,13 +13,17 @@ fn main() {
 
     for b in io::stdin().bytes() {
         let b = b.unwrap();
+        let c = b as char;
 
         if b == 113 {
             break;
         };
 
-        let c = b as char;
-        println!("{:?} {:?} {:?}", _i, b, c);
+        if c.is_control() {
+            println!("{:?} \r", b);
+        } else {
+            println!("{:?} ({})\r", b, c);
+        }
 
         _i += 1;
     }
@@ -27,7 +31,7 @@ fn main() {
 }
 
 fn enable_raw_mode(fd: i32, mut termios: Termios) {
-    termios.c_lflag &= !(ECHO | ICANON);
+    termios.c_lflag &= !(ECHO | ICANON | ISIG);
     tcsetattr(fd, TCSAFLUSH, &termios).expect("Error updating termios constants.");
 }
 
