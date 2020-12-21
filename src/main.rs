@@ -31,8 +31,9 @@ fn main() {
 }
 
 fn enable_raw_mode(fd: i32, mut termios: Termios) {
-    termios.c_iflag &= !(ICRNL | IXON);
+    termios.c_iflag &= !(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     termios.c_oflag &= !(OPOST);
+    termios.c_cflag |= CS8;
     termios.c_lflag &= !(ECHO | ICANON | IEXTEN | ISIG);
     tcsetattr(fd, TCSAFLUSH, &termios).expect("Error updating termios constants.");
 }
