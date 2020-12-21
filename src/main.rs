@@ -1,15 +1,9 @@
-use std::io;
-use std::io::Read;
-use std::os::unix::io::AsRawFd;
-use termios::*;
+use std::io::{self, stdout, Read};
+use termion::raw::IntoRawMode;
 
 fn main() {
+    let _stdout = stdout().into_raw_mode().unwrap();
     let mut _i = 0;
-
-    let fd = io::stdin().as_raw_fd();
-    let original_term = Termios::from_fd(fd).expect("");
-    let term = Termios::from_fd(fd).expect("");
-    enable_raw_mode(fd, term);
 
     for b in io::stdin().bytes() {
         let b = b.unwrap();
@@ -27,18 +21,7 @@ fn main() {
 
         _i += 1;
     }
-    disable_raw_mode(fd, original_term);
 }
 
-fn enable_raw_mode(fd: i32, mut termios: Termios) {
-    termios.c_iflag &= !(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    termios.c_oflag &= !(OPOST);
-    termios.c_cflag |= CS8;
-    termios.c_lflag &= !(ECHO | ICANON | IEXTEN | ISIG);
-    tcsetattr(fd, TCSAFLUSH, &termios).expect("Error updating termios constants.");
 }
 
-fn disable_raw_mode(fd: i32, original_term: Termios) {
-    tcsetattr(fd, TCSAFLUSH, &original_term)
-        .expect("Error resetting termios constants to default.");
-}
