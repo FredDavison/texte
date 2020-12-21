@@ -14,9 +14,9 @@ fn main() {
         };
 
         if c.is_control() {
-            println!("{:?} \r", b);
+            println!("{:?} {:#b}\r", b, b);
         } else {
-            println!("{:?} ({})\r", b, c);
+            println!("{:?} {:#b} ({})\r", b, b, c);
         }
 
         _i += 1;
