@@ -32,7 +32,9 @@ impl Terminal {
     }
 
     pub fn cursor_position(x: u16, y: u16) {
-        print!("{}", termion::cursor::Goto(x + 1, y + 1));
+        let x = x.saturating_add(1);
+        let y = y.saturating_add(1);
+        print!("{}", termion::cursor::Goto(x, y));
     }
 
     pub fn flush() -> Result<(), std::io::Error> {
