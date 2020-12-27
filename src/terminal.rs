@@ -22,19 +22,19 @@ impl Terminal {
         })
     }
 
-    pub fn clear_screen(&self) {
+    pub fn clear_screen() {
         print!("{}", termion::clear::All);
     }
 
-    pub fn cursor_position(&self, x: u16, y: u16) {
+    pub fn cursor_position(x: u16, y: u16) {
         print!("{}", termion::cursor::Goto(x + 1, y + 1));
     }
 
-    pub fn flush(&self) -> Result<(), std::io::Error> {
+    pub fn flush() -> Result<(), std::io::Error> {
         io::stdout().flush()
     }
 
-    pub fn read_key(&self) -> Result<Key, std::io::Error> {
+    pub fn read_key() -> Result<Key, std::io::Error> {
         loop {
             if let Some(key) = io::stdin().lock().keys().next() {
                 return key;

@@ -25,7 +25,7 @@ impl Editor {
     }
 
     fn process_keypress(&mut self) -> Result<(), std::io::Error> {
-        let pressed_key = self.terminal.read_key()?;
+        let pressed_key = Terminal::read_key()?;
         match pressed_key {
             Key::Ctrl('q') => self.should_quit = true,
             _ => (),
@@ -41,15 +41,15 @@ impl Editor {
     }
 
     fn refresh_screen(&self) -> Result<(), std::io::Error> {
-        self.terminal.clear_screen();
-        self.terminal.cursor_position(0, 0);
+        Terminal::clear_screen();
+        Terminal::cursor_position(0, 0);
         if self.should_quit {
             println!("Goodbye.\r")
         } else {
             self.draw_rows();
-            self.terminal.cursor_position(0, 0);
+            Terminal::cursor_position(0, 0);
         }
-        self.terminal.flush()
+        Terminal::flush()
     }
 
     fn draw_rows(&self) {
@@ -60,6 +60,6 @@ impl Editor {
 }
 
 fn die(e: std::io::Error) {
-    print!("{}", termion::clear::All);
+    Terminal::clear_screen();
     panic!(e);
 }
