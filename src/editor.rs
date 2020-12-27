@@ -1,7 +1,6 @@
 use crate::Terminal;
-use std::io::{self, stdout, Write};
+use std::io::stdout;
 use termion::event::Key;
-use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 
 pub struct Editor {
@@ -26,7 +25,7 @@ impl Editor {
     }
 
     fn process_keypress(&mut self) -> Result<(), std::io::Error> {
-        let pressed_key = read_key()?;
+        let pressed_key = self.terminal.read_key()?;
         match pressed_key {
             Key::Ctrl('q') => self.should_quit = true,
             _ => (),
@@ -50,19 +49,12 @@ impl Editor {
             self.draw_rows();
             self.terminal.cursor_position(0, 0);
         }
-        io::stdout().flush()
+        self.terminal.flush()
     }
+
     fn draw_rows(&self) {
         for _ in 0..self.terminal.size().height {
             println!("~\r");
-        }
-    }
-}
-
-fn read_key() -> Result<Key, std::io::Error> {
-    loop {
-        if let Some(key) = io::stdin().lock().keys().next() {
-            return key;
         }
     }
 }
