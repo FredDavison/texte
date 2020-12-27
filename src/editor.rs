@@ -66,9 +66,14 @@ impl Editor {
     }
 
     fn draw_welcome_message(&self) {
-        let welcome_message = format!("Hector Editor -- version {}", VERSION);
-        let width = std::cmp::min(self.terminal.size().width as usize, welcome_message.len());
-        println!("{}\r", &welcome_message[..width]);
+        let mut welcome_message = format!("Yukon Editor -- version {}", VERSION);
+        let width = self.terminal.size().width as usize;
+        let len = welcome_message.len();
+        let padding = width.saturating_sub(len) / 2;
+        let spaces = " ".repeat(padding.saturating_sub(1));
+        welcome_message = format!("~{}{}", spaces, welcome_message);
+        welcome_message.truncate(width);
+        println!("{}\r", welcome_message);
     }
 }
 
