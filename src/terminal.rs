@@ -18,6 +18,10 @@ impl Terminal {
         })
     }
 
+    pub fn clear_screen(&self) {
+        print!("{}", termion::clear::All);
+    }
+
     pub fn size(&self) -> &Size {
         &self.size
     }
