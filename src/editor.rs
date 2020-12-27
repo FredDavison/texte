@@ -43,12 +43,12 @@ impl Editor {
 
     fn refresh_screen(&self) -> Result<(), std::io::Error> {
         self.terminal.clear_screen();
-        print!("{}", termion::cursor::Goto(1, 1));
+        self.terminal.cursor_position(0, 0);
         if self.should_quit {
             println!("Goodbye.\r")
         } else {
             self.draw_rows();
-            print!("{}", termion::cursor::Goto(1, 1));
+            self.terminal.cursor_position(0, 0);
         }
         io::stdout().flush()
     }

@@ -22,6 +22,10 @@ impl Terminal {
         print!("{}", termion::clear::All);
     }
 
+    pub fn cursor_position(&self, x: u16, y: u16) {
+        print!("{}", termion::cursor::Goto(x + 1, y + 1));
+    }
+
     pub fn size(&self) -> &Size {
         &self.size
     }
